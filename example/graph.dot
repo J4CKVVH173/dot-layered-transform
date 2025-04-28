@@ -1,0 +1,89 @@
+digraph {
+
+    graph [
+        label="event_sourcing",
+        labelloc=t,
+
+        pad=0.4,
+
+        // Consider rendering the graph using a different layout algorithm, such as:
+        // [dot, neato, twopi, circo, fdp, sfdp]
+        layout=dot,
+        overlap=false,
+        splines="line",
+        rankdir=LR,
+
+        fontname="Helvetica", 
+        fontsize="36",
+    ];
+
+    node [
+        fontname="monospace",
+        fontsize="10",
+        shape="record",
+        style="filled",
+    ];
+
+    edge [
+        fontname="monospace",
+        fontsize="10",
+    ];
+
+    "event_sourcing" [label="crate|event_sourcing", fillcolor="#5397c8"]; // "crate" node
+    "event_sourcing::application" [label="pub(crate) mod|application", fillcolor="#f8c04c"]; // "mod" node
+    "event_sourcing::application::storage" [label="pub(self) mod|application::storage", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::application::use_cases" [label="pub mod|application::use_cases", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::domain" [label="pub(crate) mod|domain", fillcolor="#f8c04c"]; // "mod" node
+    "event_sourcing::domain::event" [label="pub mod|domain::event", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::domain::event_aggregate" [label="pub mod|domain::event_aggregate", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::infrastructure" [label="pub(crate) mod|infrastructure", fillcolor="#f8c04c"]; // "mod" node
+    "event_sourcing::infrastructure::input" [label="pub(self) mod|infrastructure::input", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::infrastructure::input::cli" [label="pub mod|infrastructure::input::cli", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::infrastructure::input::cli::setup" [label="pub(self) mod|infrastructure::input::cli::setup", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::infrastructure::input::cli::signals" [label="pub(self) mod|infrastructure::input::cli::signals", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::infrastructure::input::http" [label="pub mod|infrastructure::input::http", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::infrastructure::input::http::structs" [label="pub(self) mod|infrastructure::input::http::structs", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::infrastructure::raw_event" [label="pub(self) mod|infrastructure::raw_event", fillcolor="#db5367"]; // "mod" node
+    "event_sourcing::infrastructure::storages" [label="pub mod|infrastructure::storages", fillcolor="#81c169"]; // "mod" node
+    "event_sourcing::infrastructure::storages::file_storage" [label="pub(self) mod|infrastructure::storages::file_storage", fillcolor="#db5367"]; // "mod" node
+
+    "event_sourcing" -> "event_sourcing::application" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing" -> "event_sourcing::application::use_cases" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing" -> "event_sourcing::domain" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing" -> "event_sourcing::infrastructure" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing" -> "event_sourcing::infrastructure::input::http" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing" -> "event_sourcing::infrastructure::storages::file_storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::application" -> "event_sourcing::application::storage" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::application" -> "event_sourcing::application::storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::application" -> "event_sourcing::application::use_cases" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::application::storage" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::application::use_cases" -> "event_sourcing::application::storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::application::use_cases" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::application::use_cases" -> "event_sourcing::domain::event_aggregate" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::domain" -> "event_sourcing::domain::event" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::domain" -> "event_sourcing::domain::event_aggregate" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::domain::event_aggregate" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure" -> "event_sourcing::infrastructure::input" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure" -> "event_sourcing::infrastructure::input::http" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure" -> "event_sourcing::infrastructure::raw_event" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure" -> "event_sourcing::infrastructure::storages" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input" -> "event_sourcing::infrastructure::input::cli" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input" -> "event_sourcing::infrastructure::input::http" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::application::storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::application::use_cases" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::infrastructure::input::cli::setup" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::infrastructure::input::cli::setup" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::infrastructure::input::cli::signals" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::infrastructure::input::cli::signals" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::http" -> "event_sourcing::application::storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::http" -> "event_sourcing::application::use_cases" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::input::http" -> "event_sourcing::infrastructure::input::http::structs" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::input::http" -> "event_sourcing::infrastructure::input::http::structs" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::raw_event" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::storages" -> "event_sourcing::infrastructure::storages::file_storage" [label="owns", color="#000000", style="solid"] [constraint=true]; // "owns" edge
+    "event_sourcing::infrastructure::storages" -> "event_sourcing::infrastructure::storages::file_storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::storages::file_storage" -> "event_sourcing::application::storage" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::storages::file_storage" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+    "event_sourcing::infrastructure::storages::file_storage" -> "event_sourcing::infrastructure::raw_event" [label="uses", color="#7f7f7f", style="dashed"] [constraint=false]; // "uses" edge
+
+}
