@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dot-layered-transform"
+version = "0.0.1"
+authors = [
+  { name="J4CK VVH173", email="i78901234567890@gmail.com" },
+]
+description = "A Python tool for analyzing and visualizing architectural dependencies from DOT graphs."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "analyzer"]
+
+[project.urls]
+"Homepage" = "https://github.com/your-github-username/dot-layered-transform"
+"Bug Tracker" = "https://github.com/your-github-username/dot-layered-transform/issues"
+
+[tool.setuptools.packages.find]
+include = ["dot_analyzer*"]
