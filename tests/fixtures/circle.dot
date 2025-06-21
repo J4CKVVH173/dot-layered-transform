@@ -1,0 +1,46 @@
+digraph {
+    graph [
+        label="test_graph",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    // Уровень 1
+    "root" [label="crate|root", fillcolor="#5397c8"];
+    
+    // Уровень 2
+    "root::module_a" [label="pub mod|module_a", fillcolor="#81c169"];
+    "root::module_b" [label="pub(crate) mod|module_b", fillcolor="#f8c04c"];
+    "root::module_c" [label="pub mod|module_c", fillcolor="#f4a261"];  // Новый модуль
+    
+    // Уровень 3 (подмодули)
+    "root::module_a::submodule_a1" [label="pub mod|submodule_a1", fillcolor="#a5d987"];
+    "root::module_a::submodule_a2" [label="pub mod|submodule_a2", fillcolor="#a5d987"];
+    "root::module_b::submodule_b1" [label="pub mod|submodule_b1", fillcolor="#ffe082"];
+    "root::module_c::submodule_c1" [label="pub mod|submodule_c1", fillcolor="#e0bb94"];  // Подмодуль для module_c
+    
+    // Связи уровня 1 -> 2
+    "root" -> "root::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    "root" -> "root::module_b" [label="owns", color="#000000", style="solid", constraint=true];
+    "root" -> "root::module_c" [label="owns", color="#000000", style="solid", constraint=true];  // Новая связь
+    
+    // Связи уровня 2 -> 3
+    "root::module_a" -> "root::module_a::submodule_a1" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_a" -> "root::module_a::submodule_a2" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_b" -> "root::module_b::submodule_b1" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_c" -> "root::module_c::submodule_c1" [label="owns", color="#000000", style="solid", constraint=true];  // Новая связь
+    
+    // Циклические зависимости между уровнями 2
+    "root::module_a" -> "root::module_b" [label="uses", color="#7f7f7f", style="dashed", constraint=false];  // A → B
+    "root::module_b" -> "root::module_c" [label="uses", color="#7f7f7f", style="dashed", constraint=false];  // B → C
+    "root::module_c" -> "root::module_a" [label="uses", color="#ff0000", style="dashed", constraint=false];  // C → A (красный для выделения цикла)
+    
+    // Пример использования между подмодулями
+    "root::module_a::submodule_a1" -> "root::module_b::submodule_b1" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}

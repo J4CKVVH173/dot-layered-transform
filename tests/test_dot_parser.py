@@ -1,34 +1,36 @@
-from os import path
-from pathlib import Path
-
-import pytest
-
-from .fixtures.simple_graph import expected_graph
+from .fixtures.simple_graph import simple_graph
+from .fixtures.nested_graph import nested_graph
+from .fixtures.circle_graph import circle_graph
 
 from dot_parser import (
     DotParser,
     NodeType,
 )
 
-CURRENT_DIR = Path(__file__).resolve().parent
-
-
-@pytest.fixture
-def simple_dot_content():
-    with open(path.join(CURRENT_DIR, "fixtures", "simple.dot"), "r") as diagram:
-        return diagram.read()
-
-
-@pytest.fixture
-def parser():
-    return DotParser()
-
 
 def test_parse_simple_dot_content(simple_dot_content, parser):
     """Тест парсинга простого DOT содержимого."""
     parsed_graph = parser.parse_content(simple_dot_content)
 
-    expected = expected_graph()
+    expected = simple_graph()
+
+    assert expected == parsed_graph
+
+
+def test_parse_nested_dot_content(nested_dot_content, parser):
+    """Тест парсинга простого DOT содержимого."""
+    parsed_graph = parser.parse_content(nested_dot_content)
+
+    expected = nested_graph()
+
+    assert expected == parsed_graph
+
+
+def test_parse_circle_dot_content(circle_dot_content, parser):
+    """Тест парсинга простого DOT содержимого."""
+    parsed_graph = parser.parse_content(circle_dot_content)
+
+    expected = circle_graph()
 
     assert expected == parsed_graph
 

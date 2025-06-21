@@ -3,7 +3,6 @@ DOT file parser for converting to Python graph data structures.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 from enum import Enum
 import re
 
@@ -59,12 +58,12 @@ class EdgeAttributes:
     edge_type: EdgeType
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class Node:
     """Graph node."""
 
     id: str
-    attributes: NodeAttributes
+    attributes: NodeAttributes = field(compare=False, hash=False)
 
 
 @dataclass
@@ -81,8 +80,8 @@ class Graph:
     """Graph representation."""
 
     attributes: GraphAttributes
-    nodes: Dict[str, Node] = field(default_factory=dict)
-    edges: List[Edge] = field(default_factory=list)
+    nodes: dict[str, Node] = field(default_factory=dict)
+    edges: list[Edge] = field(default_factory=list)
 
     def add_node(self, node: Node) -> None:
         """Add node to the graph."""
@@ -92,11 +91,11 @@ class Graph:
         """Add edge to the graph."""
         self.edges.append(edge)
 
-    def get_node(self, node_id: str) -> Optional[Node]:
+    def get_node(self, node_id: str) -> Node | None:
         """Get node by ID."""
         return self.nodes.get(node_id)
 
-    def get_neighbors(self, node_id: str) -> List[str]:
+    def get_neighbors(self, node_id: str) -> list[str]:
         """Get node neighbors."""
         neighbors = []
         for edge in self.edges:
@@ -104,11 +103,11 @@ class Graph:
                 neighbors.append(edge.target)
         return neighbors
 
-    def get_edges_from(self, node_id: str) -> List[Edge]:
+    def get_edges_from(self, node_id: str) -> list[Edge]:
         """Get all edges outgoing from the node."""
         return [edge for edge in self.edges if edge.source == node_id]
 
-    def get_edges_to(self, node_id: str) -> List[Edge]:
+    def get_edges_to(self, node_id: str) -> list[Edge]:
         """Get all edges incoming to the node."""
         return [edge for edge in self.edges if edge.target == node_id]
 
@@ -124,7 +123,7 @@ class DotParser:
         )
         self.graph_attr_pattern = re.compile(r"(\w+)=([^,\]]+)")
 
-    def parse_attributes(self, attr_string: str) -> Dict[str, str]:
+    def parse_attributes(self, attr_string: str) -> dict[str, str]:
         """Parse attribute string."""
         attributes = {}
         attr_string = attr_string.strip()

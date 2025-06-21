@@ -1,0 +1,32 @@
+digraph {
+    graph [
+        label="test_graph",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "root" [label="crate|root", fillcolor="#5397c8"];
+    
+    "root::module_a" [label="pub mod|module_a", fillcolor="#81c169"];
+    "root::module_b" [label="pub(crate) mod|module_b", fillcolor="#f8c04c"];
+    
+    "root::module_a::submodule_a1" [label="pub mod|submodule_a1", fillcolor="#a5d987"];
+    "root::module_a::submodule_a2" [label="pub mod|submodule_a2", fillcolor="#a5d987"];
+    "root::module_b::submodule_b1" [label="pub mod|submodule_b1", fillcolor="#ffe082"];
+    
+    "root" -> "root::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    "root" -> "root::module_b" [label="owns", color="#000000", style="solid", constraint=true];
+    
+    "root::module_a" -> "root::module_a::submodule_a1" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_a" -> "root::module_a::submodule_a2" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_b" -> "root::module_b::submodule_b1" [label="owns", color="#000000", style="solid", constraint=true];
+
+    "root::module_a::submodule_a1" -> "root::module_b::submodule_b1" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+    "root::module_a" -> "root::module_b" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}

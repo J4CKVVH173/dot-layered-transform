@@ -10,7 +10,7 @@ from dot_parser import (
 )
 
 
-def expected_graph():
+def simple_graph():
     """Function to get simple.dot as python object."""
     graph_attrs = GraphAttributes(label="test_graph", layout="dot", rankdir="LR")
 
