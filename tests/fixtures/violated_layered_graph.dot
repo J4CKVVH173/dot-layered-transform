@@ -1,0 +1,31 @@
+digraph {
+    graph [
+        label="violated_layered_graph",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "event_sourcing::application" [label="application", fillcolor="#f8c04c"];
+    "event_sourcing::domain" [label="domain", fillcolor="#f8c04c"];
+    "event_sourcing::infrastructure" [label="infrastructure", fillcolor="#f8c04c"];
+    
+    "event_sourcing::application::use_cases" [label="application::use_cases", fillcolor="#81c169"];
+    "event_sourcing::domain::event" [label="domain::event", fillcolor="#81c169"];
+    "event_sourcing::infrastructure::input::cli" [label="infrastructure::input::cli", fillcolor="#81c169"];
+    
+    "event_sourcing::application" -> "event_sourcing::application::use_cases" [label="owns", color="#000000", style="solid", constraint=true];
+    "event_sourcing::domain" -> "event_sourcing::domain::event" [label="owns", color="#000000", style="solid", constraint=true];
+    "event_sourcing::infrastructure" -> "event_sourcing::infrastructure::input::cli" [label="owns", color="#000000", style="solid", constraint=true];
+    
+    "event_sourcing::application::use_cases" -> "event_sourcing::domain::event" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+    "event_sourcing::infrastructure::input::cli" -> "event_sourcing::application::use_cases" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+    
+    // Нарушение порядка зависимостей: domain -> infrastructure
+    "event_sourcing::domain::event" -> "event_sourcing::infrastructure::input::cli" [label="uses", color="#ff0000", style="dashed", constraint=false];
+}

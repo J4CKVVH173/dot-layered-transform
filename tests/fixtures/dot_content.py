@@ -21,3 +21,15 @@ def nested_dot_content():
 def circle_dot_content():
     with open(path.join(CURRENT_DIR, "circle.dot"), "r") as diagram:
         return diagram.read()
+
+
+@pytest.fixture
+def layered_dot_content():
+    with open(path.join(CURRENT_DIR, "layered_graph.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def violated_layered_dot_content():
+    with open(path.join(CURRENT_DIR, "violated_layered_graph.dot"), "r") as diagram:
+        return diagram.read()

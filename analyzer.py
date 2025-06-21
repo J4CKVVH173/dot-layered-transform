@@ -1,23 +1,74 @@
+from dataclasses import dataclass
+from enum import Enum
+
 from dot_parser import EdgeType, Graph, Node
 
 
-class ArchitectureAnalyzer:
-    """Анализатор архитектуры на основе графа зависимостей."""
+class Layer(Enum):
+    DOMAIN = "domain"
+    APPLICATION = "application"
+    INFRASTRUCTURE = "infrastructure"
 
-    __slots__ = ('graph',)
+
+class LayerHierarchy:
+    """Manages the hierarchy and order of architectural layers."""
+
+    def __init__(self):
+        self._layers = [
+            Layer.DOMAIN,
+            Layer.APPLICATION,
+            Layer.INFRASTRUCTURE,
+        ]
+        self._layer_to_index = {layer: i for i, layer in enumerate(self._layers)}
+
+    def get_layer_index(self, layer: Layer) -> int:
+        """Get the index of a given layer."""
+        return self._layer_to_index[layer]
+
+    def get_layer_by_name(self, name: str) -> Layer | None:
+        """Get a Layer enum member by its string name."""
+        for layer in self._layers:
+            if layer.value == name:
+                return layer
+        return None
+
+    def is_higher_layer(self, layer1: Layer, layer2: Layer) -> bool:
+        """Check if layer1 is a higher layer than layer2."""
+        return self.get_layer_index(layer1) > self.get_layer_index(layer2)
+
+    def get_all_layer_names(self) -> list[str]:
+        """Get a list of all layer names."""
+        return [layer.value for layer in self._layers]
+
+
+@dataclass
+class LayerViolation:
+    """Represents a violation of architectural layer dependencies."""
+
+    source: str
+    target: str
+    source_layer: str
+    target_layer: str
+    violation_type: str = "layer_dependency"
+
+
+class ArchitectureAnalyzer:
+    """Architecture analyzer based on the dependency graph."""
+
+    __slots__ = ("graph",)
 
     def __init__(self, graph: Graph):
         self.graph = graph
 
     def find_circular_dependencies(self) -> list[list[Node]]:
-        """Найти циклические зависимости (простой алгоритм)."""
+        """Find circular dependencies (simple algorithm)."""
         cycles = []
         visited = set()
         rec_stack = set()
 
         def dfs(node: Node, path):
             if node in rec_stack:
-                # Найден цикл
+                # Cycle found
                 cycle_start_index = path.index(node)
                 cycle = path[cycle_start_index:]
                 cycles.append(cycle)
@@ -42,16 +93,8 @@ class ArchitectureAnalyzer:
 
         return cycles
 
-    def _get_layer_modules(self, layer_name: str) -> list[str]:
-        """Получить все модули определённого слоя."""
-        return [
-            node_id
-            for node_id in self.graph.nodes.keys()
-            if f"::{layer_name}" in node_id
-        ]
-
     def get_dependencies(self, node_id: str) -> dict[str, list[str]]:
-        """Получить зависимости узла, разделённые по типам."""
+        """Get node dependencies, separated by type."""
         edges = self.graph.get_edges_from(node_id)
         dependencies = {"owns": [], "uses": []}
 
@@ -61,10 +104,11 @@ class ArchitectureAnalyzer:
 
         return dependencies
 
-    def get_layer_violations(self) -> list[dict]:
-        """Найти нарушения слоёв архитектуры."""
+    def get_layer_violations(self) -> list[LayerViolation]:
+        """Find architectural layer violations."""
         violations = []
-        layers = ["domain", "application", "infrastructure"]
+        layer_hierarchy = LayerHierarchy()
+        layers = layer_hierarchy.get_all_layer_names()
 
         for i, layer in enumerate(layers):
             layer_modules = self._get_layer_modules(layer)
@@ -76,28 +120,62 @@ class ArchitectureAnalyzer:
                 ]
 
                 for edge in uses_edges:
-                    target_layer = None
-                    for j, target_layer_name in enumerate(layers):
+                    source_layer_enum = layer_hierarchy.get_layer_by_name(layer)
+
+                    target_layer_enum = None
+                    for target_layer_name in layers:
                         if f"::{target_layer_name}" in edge.target:
-                            target_layer = j
+                            target_layer_enum = layer_hierarchy.get_layer_by_name(
+                                target_layer_name
+                            )
                             break
 
-                    # Проверяем нарушение: слой не должен зависеть от слоёв выше
-                    if target_layer is not None and target_layer > i:
-                        violations.append(
-                            {
-                                "source": module,
-                                "target": edge.target,
-                                "source_layer": layer,
-                                "target_layer": layers[target_layer],
-                                "violation_type": "layer_dependency",
-                            }
-                        )
+                    # Check for violation: a layer should not depend on layers above it
+                    if source_layer_enum == Layer.DOMAIN:
+                        if target_layer_enum:  # Domain should not depend on anything
+                            violations.append(
+                                LayerViolation(
+                                    source=module,
+                                    target=edge.target,
+                                    source_layer=source_layer_enum.value,
+                                    target_layer=target_layer_enum.value,
+                                )
+                            )
+                    elif source_layer_enum == Layer.APPLICATION:
+                        if target_layer_enum and \
+                           target_layer_enum != Layer.DOMAIN:  # Application can only depend on Domain
+                            violations.append(
+                                LayerViolation(
+                                    source=module,
+                                    target=edge.target,
+                                    source_layer=source_layer_enum.value,
+                                    target_layer=target_layer_enum.value,
+                                )
+                            )
+                    elif source_layer_enum == Layer.INFRASTRUCTURE:
+                        if target_layer_enum and \
+                           target_layer_enum != Layer.APPLICATION:  # Infrastructure can only depend on Application
+                            violations.append(
+                                LayerViolation(
+                                    source=module,
+                                    target=edge.target,
+                                    source_layer=source_layer_enum.value,
+                                    target_layer=target_layer_enum.value,
+                                )
+                            )
 
         return violations
 
+    def _get_layer_modules(self, layer_name: str) -> list[str]:
+        """Get all modules of a specific layer."""
+        return [
+            node_id
+            for node_id in self.graph.nodes.keys()
+            if f"::{layer_name}" in node_id
+        ]
+
     def get_statistics(self) -> dict:
-        """Получить статистику по графу."""
+        """Get graph statistics."""
         stats = {
             "total_nodes": len(self.graph.nodes),
             "total_edges": len(self.graph.edges),
@@ -106,18 +184,19 @@ class ArchitectureAnalyzer:
             "layers": {},
         }
 
-        # Статистика узлов
+        # Node statistics
         for node in self.graph.nodes.values():
             node_type = node.attributes.node_type.value
             stats["node_types"][node_type] = stats["node_types"].get(node_type, 0) + 1
 
-        # Статистика рёбер
+        # Edge statistics
         for edge in self.graph.edges:
             edge_type = edge.attributes.edge_type.value
             stats["edge_types"][edge_type] = stats["edge_types"].get(edge_type, 0) + 1
 
-        # Статистика слоёв
-        layers = ["application", "domain", "infrastructure"]
+        # Layer statistics
+        layer_hierarchy = LayerHierarchy()
+        layers = layer_hierarchy.get_all_layer_names()
         for layer in layers:
             layer_modules = self._get_layer_modules(layer)
             stats["layers"][layer] = len(layer_modules)
