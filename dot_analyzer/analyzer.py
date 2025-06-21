@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from dot_parser import EdgeType, Graph, Node
+from .dot_parser import EdgeType, Graph, Node
 
 
 class Layer(Enum):

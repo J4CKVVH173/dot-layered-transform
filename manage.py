@@ -1,9 +1,9 @@
 import argparse
 import sys
 
-from dot_parser import DotParser
-from analyzer import ArchitectureAnalyzer
-from graph_visualizer import GraphVisualizer
+from dot_analyzer.dot_parser import DotParser
+from dot_analyzer.analyzer import ArchitectureAnalyzer
+from dot_analyzer.graph_visualizer import GraphVisualizer
 
 
 def main():

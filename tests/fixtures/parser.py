@@ -1,6 +1,6 @@
 import pytest
 
-from dot_parser import DotParser
+from dot_analyzer.dot_parser import DotParser
 
 
 @pytest.fixture

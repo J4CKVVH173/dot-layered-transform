@@ -1,4 +1,4 @@
-from dot_parser import Graph
+from .dot_parser import Graph
 from analyzer import ArchitectureAnalyzer, LayerHierarchy
 
 

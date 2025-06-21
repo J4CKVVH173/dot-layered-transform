@@ -1,5 +1,5 @@
-from tests.fixtures.circled_nodes import CIRCLED_NODES
-from analyzer import ArchitectureAnalyzer, LayerViolation
+from dot_analyzer.tests.fixtures.circled_nodes import CIRCLED_NODES
+from dot_analyzer.analyzer import ArchitectureAnalyzer, LayerViolation
 
 
 def test_analyze_simple_to_have_circle(parser, simple_dot_content):
