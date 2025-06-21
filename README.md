@@ -51,13 +51,55 @@ Here's the typical workflow:
     cd dot-layered-transform
     ```
 
-2. Install dependencies:
+2. Install development dependencies (optional, for contributors):
 
     ```bash
     pip install -r requirements.txt
     ```
 
-### Usage
+    **Note**: The core functionality of the `manage.py` script does not require any external Python dependencies beyond the standard library. The `requirements.txt` file is primarily for development and testing purposes.
+
+### Usage Example
+
+Here’s a real-world example of how this tool can be used in a project.
+
+#### 1. Generate the initial DOT diagram
+
+I used [`cargo-modules`](https://github.com/regexident/cargo-modules) to generate a DOT file from a Rust project:
+
+```bash
+cargo modules dependencies --package <PACKAGE-NAME> --bin <PACKAGE-NAME>  --no-externs --no-sysroot --no-fns --no-traits --no-types  --layout dot > graph.dot
+```
+
+#### 2. Transform the DOT file and analyze
+
+Use the `manage.py` script to analyze the graph, detect violations, and generate a layered DOT file:
+
+```bash
+python manage.py graph.dot -o layered_graph.dot
+```
+
+This command will also print any detected circular dependencies or layer violations to the console.
+
+#### 3. Render the transformed DOT file
+
+Using the Graphviz `dot` utility, you can generate an image for visualization:
+
+```bash
+dot -Tpng layered_graph.dot -o layered_graph.png
+```
+
+### Visual Comparison
+
+#### Before Transformation
+
+![Before Transformation](./example/before_transformation.png)
+
+#### After Transformation
+
+![After Transformation](./example/after_transformation.png)
+
+### Command Line Usage
 
 Run the `manage.py` script from the command line:
 
@@ -67,16 +109,6 @@ python manage.py <INPUT_DOT_FILE> [-o <OUTPUT_DOT_FILE>]
 
 * `<INPUT_DOT_FILE>`: Path to your original DOT file (e.g., `example/graph.dot`).
 * `-o <OUTPUT_DOT_FILE>` (optional): Path where the transformed, layered DOT file will be saved. If omitted, the output will be printed to standard output.
-
-**Example:**
-
-```bash
-# Analyze and generate a layered DOT file from an example graph
-python manage.py example/graph.dot -o output_layered.dot
-
-# Render the generated DOT file to a PNG image using Graphviz
-dot -Tpng output_layered.dot -o output_layered.png
-```
 
 ## Development and Contribution
 
