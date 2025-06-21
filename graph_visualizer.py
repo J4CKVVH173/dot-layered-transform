@@ -20,10 +20,10 @@ class GraphVisualizer:
 
         # Define colors for layers and nodes
         layer_colors = {
-            "domain": "#ADD8E6",  # Light Blue
-            "application": "#90EE90",  # Light Green
-            "infrastructure": "#FFD700",  # Gold
-            "root": "#D3D3D3",  # Light Grey for root/unassigned
+            "domain": "#ADD8E6",
+            "application": "#90EE90",
+            "infrastructure": "#FFD700",
+            "root": "#D3D3D3",
         }
         node_fill_color = "#FFFFFF"  # White for all nodes
 
@@ -60,10 +60,9 @@ class GraphVisualizer:
                 dot_lines.append("    }")
 
         # Add root node if exists and not part of a layer subgraph
-        # Add root node if exists and not part of a layer subgraph
         if nodes_by_layer["root"]:
-            dot_lines.append(f"    subgraph cluster_root {{")
-            dot_lines.append(f"        label=\"Other Nodes\";")
+            dot_lines.append(f"    subgraph cluster_root {{")  # noqa
+            dot_lines.append(f"        label=\"Other Nodes\";")  # noqa
             dot_lines.append("        style=filled;")
             dot_lines.append(f"        color=\"{layer_colors.get('root', '#D3D3D3')}\";")
             dot_lines.append(f"        node [fillcolor=\"{node_fill_color}\"];")
@@ -80,7 +79,7 @@ class GraphVisualizer:
                 edge_color = "darkgreen"
 
             dot_lines.append(
-                f'    "{edge.source}" -> "{edge.target}" [label="{edge.attributes.edge_type.value}", color="{edge_color}"];'
+                f'    "{edge.source}" -> "{edge.target}" [label="{edge.attributes.edge_type.value}", color="{edge_color}"];'  # noqa
             )
 
         dot_lines.append("}")

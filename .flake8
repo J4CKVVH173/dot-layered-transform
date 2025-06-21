@@ -1,0 +1,5 @@
+[flake8]
+exclude = .git, __pycache__, migrations, fixtures, asgi.py, wsgi.py, env, venv, .idea, manage.py, settings.py,
+	managers.py, __init__.py, settings_dev.py, gunicorn.conf.py, test.py, test.json, test_execute, fixtures.py
+max-line-length = 120
+ignore: D106, D104, D105, D107, I100, I201, D100, A003, W504, W503, E203
