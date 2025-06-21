@@ -121,10 +121,6 @@ This project is designed to be extensible. Future enhancements may include:
 
 Contributions are welcome! Please refer to the `CONTRIBUTING.md` (if available) for guidelines.
 
-## License
-
-[Specify your license here, e.g., MIT License]
-
 ---
 
 ## Acknowledgements
