@@ -1,0 +1,21 @@
+digraph {
+    graph [
+        label="test_graph",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "root" [label="crate|root", fillcolor="#5397c8"];
+    "root::module_a" [label="pub mod|module_a", fillcolor="#81c169"];
+    "root::module_b" [label="pub(crate) mod|module_b", fillcolor="#f8c04c"];
+    
+    "root" -> "root::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    "root" -> "root::module_b" [label="owns", color="#000000", style="solid", constraint=true];
+    "root::module_a" -> "root::module_b" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}
