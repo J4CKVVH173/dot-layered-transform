@@ -24,8 +24,8 @@ classifiers = [
 keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "analyzer"]
 
 [project.urls]
-"Homepage" = "https://github.com/your-github-username/dot-layered-transform"
-"Bug Tracker" = "https://github.com/your-github-username/dot-layered-transform/issues"
+"Homepage" = "https://github.com/J4CKVVH173/dot-layered-transform"
+"Bug Tracker" = "https://github.com/J4CKVVH173/dot-layered-transform/issues"
 
 [tool.setuptools.packages.find]
 include = ["dot_analyzer*"]
