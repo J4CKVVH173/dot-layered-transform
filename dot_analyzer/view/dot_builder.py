@@ -34,7 +34,7 @@ class DotView:
         nodes_by_layer = {layer: [] for layer in layers}
         # Add an 'unknown' category for nodes not explicitly in a defined layer
         nodes_by_layer["unknown"] = []
-        crate_nodes = [] # New list for crate nodes
+        crate_nodes = []
 
         for node_id, node in graph.nodes.items():
             if node.attributes.node_type.value == "crate":
@@ -65,10 +65,12 @@ class DotView:
                         f'        "{node.id}" [label="{node.attributes.label}"];'
                     )
                 dot_lines.append("    }")
-    
+
             # Add crate nodes directly (not in a subgraph)
             for node in crate_nodes:
-                dot_lines.append(f'    "{node.id}" [label="{node.attributes.label}", shape=box, style=filled, fillcolor="#ADD8E6"];')
+                dot_lines.append(
+                    f'    "{node.id}" [label="{node.attributes.label}", shape=box, style=filled, fillcolor="#ADD8E6"];'
+                )
 
         # Add unknown node if exists and not part of a layer subgraph
         if nodes_by_layer["unknown"]:

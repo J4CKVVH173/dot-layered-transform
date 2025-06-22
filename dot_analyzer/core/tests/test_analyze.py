@@ -44,6 +44,7 @@ def test_analyze_statistics(parser, nested_dot_content):
             "application": 0,
             "domain": 0,
             "infrastructure": 0,
+            "unknown": 0,
         },
         "node_types": {
             "crate": 1,
