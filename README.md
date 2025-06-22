@@ -77,7 +77,7 @@ After installing the package (`pip install dot-layered-transform`), you can use 
 python -m dot_analyzer.cli --help
 ```
 
-This will show the main commands available: `transform` and `analyze`.
+This will show the main commands.
 
 **Transform Command:**
 
