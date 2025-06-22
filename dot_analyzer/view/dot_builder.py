@@ -87,17 +87,49 @@ class DotView:
                 )
             dot_lines.append("    }")
 
+        # Get violations and cycles from the analyzer
+        layer_violations = analyzer.get_layer_violations()
+        print(layer_violations)
+        circular_dependencies = analyzer.find_circular_dependencies()
+
+        # Convert circular dependencies to a set of (source, target) tuples for easy lookup
+        circular_edges = set()
+        for cycle in circular_dependencies:
+            for i in range(len(cycle)):
+                source_node = cycle[i]
+                target_node = cycle[(i + 1) % len(cycle)]
+                # Find the actual edge in the graph
+                for edge in graph.edges:
+                    if edge.source == source_node.id and edge.target == target_node.id:
+                        circular_edges.add((edge.source, edge.target))
+                        break
+
         # Add edges
         for edge in graph.edges:
-            edge_color = "black"
-            if edge.attributes.edge_type.value == "uses":
-                edge_color = "#C4B5FD"
-            elif edge.attributes.edge_type.value == "owns":
-                edge_color = "#FFBC9A"
+            if edge.attributes.edge_type.value == "owns":
+                edge_color = "black"
+                dot_lines.append(
+                    f'    "{edge.source}" -> "{edge.target}" '
+                    f'[label="{edge.attributes.edge_type.value}", color="{edge_color}"];'
+                )
+            elif edge.attributes.edge_type.value == "uses":
+                is_violation = False
+                for violation in layer_violations:
+                    if (
+                        violation.source == edge.source
+                        and violation.target == edge.target
+                    ):
+                        is_violation = True
+                        break
 
-            dot_lines.append(
-                f'    "{edge.source}" -> "{edge.target}" [label="{edge.attributes.edge_type.value}", color="{edge_color}"];'  # noqa
-            )
+                is_circular = (edge.source, edge.target) in circular_edges
+
+                if is_violation or is_circular:
+                    edge_color = "#f55c7a"  # Color for violations/cycles
+                    dot_lines.append(
+                        f'    "{edge.source}" -> "{edge.target}" '
+                        f'[label="{edge.attributes.edge_type.value}", color="{edge_color}", style="dashed"];'
+                    )
 
         dot_lines.append("}")
         return "\n".join(dot_lines)

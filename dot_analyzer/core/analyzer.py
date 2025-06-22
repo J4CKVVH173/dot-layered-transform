@@ -82,10 +82,11 @@ class ArchitectureAnalyzer:
             visited.add(node)
             rec_stack.add(node)
 
-            for neighbor_id in self.graph.get_neighbors(node.id):
-                neighbor_node = self.graph.get_node(neighbor_id)
-                if neighbor_node:
-                    dfs(neighbor_node, path + [neighbor_node])
+            for edge in self.graph.get_edges_from(node.id):
+                if edge.attributes.edge_type == EdgeType.USES:
+                    neighbor_node = self.graph.get_node(edge.target)
+                    if neighbor_node:
+                        dfs(neighbor_node, path + [neighbor_node])
 
             rec_stack.remove(node)
 
@@ -115,8 +116,12 @@ class ArchitectureAnalyzer:
         for i, layer in enumerate(layers):
             layer_modules = self._get_layer_modules(layer)
 
-            for module in layer_modules:
-                edges = self.graph.get_edges_from(module)
+            for module_id in layer_modules:
+                module_node = self.graph.get_node(module_id)
+                if module_node and module_node.attributes.node_type.value == "crate":
+                    continue  # Skip crate nodes
+
+                edges = self.graph.get_edges_from(module_id)
                 uses_edges = [
                     e for e in edges if e.attributes.edge_type == EdgeType.USES
                 ]
@@ -134,33 +139,39 @@ class ArchitectureAnalyzer:
 
                     # Check for violation: a layer should not depend on layers above it
                     if source_layer_enum == Layer.DOMAIN:
-                        # Domain should not depend on anything
-                        if target_layer_enum:
+                        # Domain can only depend on Domain
+                        if target_layer_enum and target_layer_enum != Layer.DOMAIN:
                             violations.append(
                                 LayerViolation(
-                                    source=module,
+                                    source=module_id,
                                     target=edge.target,
                                     source_layer=source_layer_enum.value,
                                     target_layer=target_layer_enum.value,
                                 )
                             )
                     elif source_layer_enum == Layer.APPLICATION:
-                        # Application can only depend on Domain
-                        if target_layer_enum and target_layer_enum != Layer.DOMAIN:
+                        # Application can only depend on Domain or Application
+                        if target_layer_enum and target_layer_enum not in [
+                            Layer.DOMAIN,
+                            Layer.APPLICATION,
+                        ]:
                             violations.append(
                                 LayerViolation(
-                                    source=module,
+                                    source=module_id,
                                     target=edge.target,
                                     source_layer=source_layer_enum.value,
                                     target_layer=target_layer_enum.value,
                                 )
                             )
                     elif source_layer_enum == Layer.INFRASTRUCTURE:
-                        # Infrastructure can only depend on Application
-                        if target_layer_enum and target_layer_enum != Layer.APPLICATION:
+                        # Infrastructure can only depend on Application or Infrastructure
+                        if target_layer_enum and target_layer_enum not in [
+                            Layer.APPLICATION,
+                            Layer.INFRASTRUCTURE,
+                        ]:
                             violations.append(
                                 LayerViolation(
-                                    source=module,
+                                    source=module_id,
                                     target=edge.target,
                                     source_layer=source_layer_enum.value,
                                     target_layer=target_layer_enum.value,
