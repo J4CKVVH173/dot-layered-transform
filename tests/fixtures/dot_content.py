@@ -33,3 +33,75 @@ def layered_dot_content():
 def violated_layered_dot_content():
     with open(path.join(CURRENT_DIR, "violated_layered_graph.dot"), "r") as diagram:
         return diagram.read()
+
+
+@pytest.fixture
+def domain_to_domain_dot_content():
+    with open(path.join(CURRENT_DIR, "domain_to_domain.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def application_to_application_dot_content():
+    with open(path.join(CURRENT_DIR, "application_to_application.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def infrastructure_to_infrastructure_dot_content():
+    with open(path.join(CURRENT_DIR, "infrastructure_to_infrastructure.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def application_uses_domain_dot_content():
+    with open(path.join(CURRENT_DIR, "application_uses_domain.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def infrastructure_uses_application_dot_content():
+    with open(path.join(CURRENT_DIR, "infrastructure_uses_application.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def infrastructure_uses_domain_dot_content():
+    with open(path.join(CURRENT_DIR, "infrastructure_uses_domain.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def application_uses_infrastructure_dot_content():
+    with open(path.join(CURRENT_DIR, "application_uses_infrastructure.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def domain_uses_unknown_dot_content():
+    with open(path.join(CURRENT_DIR, "domain_uses_unknown.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def application_uses_unknown_dot_content():
+    with open(path.join(CURRENT_DIR, "application_uses_unknown.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def infrastructure_uses_unknown_dot_content():
+    with open(path.join(CURRENT_DIR, "infrastructure_uses_unknown.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def domain_uses_no_layer_dot_content():
+    with open(path.join(CURRENT_DIR, "domain_uses_no_layer.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def application_uses_no_layer_dot_content():
+    with open(path.join(CURRENT_DIR, "application_uses_no_layer.dot"), "r") as diagram:
+        return diagram.read()

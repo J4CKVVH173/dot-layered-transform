@@ -1,0 +1,22 @@
+digraph {
+    graph [
+        label="domain_to_domain",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "my_app::domain" [label="domain", fillcolor="#f8c04c"];
+    "my_app::domain::module_a" [label="domain::module_a", fillcolor="#81c169"];
+    "my_app::domain::module_b" [label="domain::module_b", fillcolor="#81c169"];
+    
+    "my_app::domain" -> "my_app::domain::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    "my_app::domain" -> "my_app::domain::module_b" [label="owns", color="#000000", style="solid", constraint=true];
+    
+    "my_app::domain::module_a" -> "my_app::domain::module_b" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}

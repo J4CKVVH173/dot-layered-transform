@@ -129,7 +129,7 @@ class ArchitectureAnalyzer:
                 for edge in uses_edges:
                     source_layer_enum = layer_hierarchy.get_layer_by_name(layer)
 
-                    target_layer_enum = None
+                    target_layer_enum = Layer.UNKNOWN  # Default to UNKNOWN if no layer found
                     for target_layer_name in layers:
                         if f"::{target_layer_name}" in edge.target:
                             target_layer_enum = layer_hierarchy.get_layer_by_name(

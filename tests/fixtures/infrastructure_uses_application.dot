@@ -1,0 +1,23 @@
+digraph {
+    graph [
+        label="infrastructure_uses_application",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "my_app::infrastructure" [label="infrastructure", fillcolor="#f8c04c"];
+    "my_app::application" [label="application", fillcolor="#f8c04c"];
+    "my_app::infrastructure::module_a" [label="infrastructure::module_a", fillcolor="#81c169"];
+    "my_app::application::module_b" [label="application::module_b", fillcolor="#81c169"];
+    
+    "my_app::infrastructure" -> "my_app::infrastructure::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    "my_app::application" -> "my_app::application::module_b" [label="owns", color="#000000", style="solid", constraint=true];
+    
+    "my_app::infrastructure::module_a" -> "my_app::application::module_b" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}

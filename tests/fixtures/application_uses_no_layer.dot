@@ -1,0 +1,21 @@
+digraph {
+    graph [
+        label="application_uses_no_layer",
+        layout=dot,
+        rankdir=LR
+    ];
+    
+    node [
+        fontname="monospace",
+        shape="box",
+        style="filled"
+    ];
+    
+    "my_app::application" [label="application", fillcolor="#f8c04c"];
+    "my_app::no_layer_module" [label="no_layer_module", fillcolor="#81c169"];
+    "my_app::application::module_a" [label="application::module_a", fillcolor="#81c169"];
+    
+    "my_app::application" -> "my_app::application::module_a" [label="owns", color="#000000", style="solid", constraint=true];
+    
+    "my_app::application::module_a" -> "my_app::no_layer_module" [label="uses", color="#7f7f7f", style="dashed", constraint=false];
+}
