@@ -22,6 +22,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "analyzer"]
+py_modules = ["manage"]
 
 [project.scripts]
 dot-layered-transform = "manage:main"
