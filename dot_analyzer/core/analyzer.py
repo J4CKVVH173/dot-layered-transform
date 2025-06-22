@@ -8,6 +8,7 @@ class Layer(Enum):
     DOMAIN = "domain"
     APPLICATION = "application"
     INFRASTRUCTURE = "infrastructure"
+    UNKNOWN = "unknown"
 
 
 class LayerHierarchy:
@@ -18,6 +19,7 @@ class LayerHierarchy:
             Layer.DOMAIN,
             Layer.APPLICATION,
             Layer.INFRASTRUCTURE,
+            Layer.UNKNOWN,
         ]
         self._layer_to_index = {layer: i for i, layer in enumerate(self._layers)}
 
@@ -132,7 +134,8 @@ class ArchitectureAnalyzer:
 
                     # Check for violation: a layer should not depend on layers above it
                     if source_layer_enum == Layer.DOMAIN:
-                        if target_layer_enum:  # Domain should not depend on anything
+                        # Domain should not depend on anything
+                        if target_layer_enum:
                             violations.append(
                                 LayerViolation(
                                     source=module,
@@ -142,8 +145,8 @@ class ArchitectureAnalyzer:
                                 )
                             )
                     elif source_layer_enum == Layer.APPLICATION:
-                        if target_layer_enum and \
-                           target_layer_enum != Layer.DOMAIN:  # Application can only depend on Domain
+                        # Application can only depend on Domain
+                        if target_layer_enum and target_layer_enum != Layer.DOMAIN:
                             violations.append(
                                 LayerViolation(
                                     source=module,
@@ -153,8 +156,8 @@ class ArchitectureAnalyzer:
                                 )
                             )
                     elif source_layer_enum == Layer.INFRASTRUCTURE:
-                        if target_layer_enum and \
-                           target_layer_enum != Layer.APPLICATION:  # Infrastructure can only depend on Application
+                        # Infrastructure can only depend on Application
+                        if target_layer_enum and target_layer_enum != Layer.APPLICATION:
                             violations.append(
                                 LayerViolation(
                                     source=module,
@@ -163,6 +166,9 @@ class ArchitectureAnalyzer:
                                     target_layer=target_layer_enum.value,
                                 )
                             )
+                    elif source_layer_enum == Layer.UNKNOWN:
+                        # UNKNOWN layer can depend on anything, no violations here
+                        pass
 
         return violations
 

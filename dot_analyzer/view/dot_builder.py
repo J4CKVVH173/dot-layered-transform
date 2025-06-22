@@ -23,7 +23,7 @@ class DotView:
             "domain": "#A6C8FF",
             "application": "#9EEBB3",
             "infrastructure": "#FFE29A",
-            "root": "#a9def9",
+            "unknown": "#D3D3D3",
         }
         node_fill_color = "#FFFFFF"  # White for all nodes
 
@@ -32,10 +32,15 @@ class DotView:
 
         # Group nodes by layer
         nodes_by_layer = {layer: [] for layer in layers}
-        # Add a 'root' category for nodes not explicitly in a defined layer
-        nodes_by_layer["root"] = []
+        # Add an 'unknown' category for nodes not explicitly in a defined layer
+        nodes_by_layer["unknown"] = []
+        crate_nodes = [] # New list for crate nodes
 
         for node_id, node in graph.nodes.items():
+            if node.attributes.node_type.value == "crate":
+                crate_nodes.append(node)
+                continue
+
             assigned_to_layer = False
             for layer_name in layers:
                 if f"::{layer_name}" in node_id:
@@ -43,7 +48,7 @@ class DotView:
                     assigned_to_layer = True
                     break
             if not assigned_to_layer:
-                nodes_by_layer["root"].append(node)
+                nodes_by_layer["unknown"].append(node)
 
         # Add subgraphs for each layer
         for layer_name in layers:
@@ -60,17 +65,21 @@ class DotView:
                         f'        "{node.id}" [label="{node.attributes.label}"];'
                     )
                 dot_lines.append("    }")
+    
+            # Add crate nodes directly (not in a subgraph)
+            for node in crate_nodes:
+                dot_lines.append(f'    "{node.id}" [label="{node.attributes.label}", shape=box, style=filled, fillcolor="#ADD8E6"];')
 
-        # Add root node if exists and not part of a layer subgraph
-        if nodes_by_layer["root"]:
-            dot_lines.append(f"    subgraph cluster_root {{")  # noqa
-            dot_lines.append(f'        label="root";')  # noqa
+        # Add unknown node if exists and not part of a layer subgraph
+        if nodes_by_layer["unknown"]:
+            dot_lines.append(f"    subgraph cluster_unknown {{")  # noqa
+            dot_lines.append(f'        label="Unknown Layer";')  # noqa
             dot_lines.append("        style=filled;")
             dot_lines.append(
-                f"        color=\"{layer_colors.get('root', '#D3D3D3')}\";"
+                f"        color=\"{layer_colors.get('unknown', '#D3D3D3')}\";"
             )
             dot_lines.append(f'        node [fillcolor="{node_fill_color}"];')
-            for node in nodes_by_layer["root"]:
+            for node in nodes_by_layer["unknown"]:
                 dot_lines.append(
                     f'        "{node.id}" [label="{node.attributes.label}"];'
                 )
