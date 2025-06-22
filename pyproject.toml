@@ -29,3 +29,7 @@ keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "an
 
 [tool.setuptools.packages.find]
 include = ["dot_analyzer*"]
+
+[tool.setuptools_scm]
+# Явная конфигурация для setuptools_scm
+write_to = "dot_analyzer/_version.py"

@@ -22,7 +22,22 @@ jobs:
       - name: Debug setuptools_scm version
         run: |
           python -c "from setuptools_scm import get_version; print(f'Version from setuptools_scm: {get_version()}')"
+      - name: Clean build artifacts
+        run: |
+          rm -rf build/ dist/ *.egg-info/
       - name: Build distribution
-        run: python -m build
+        run: |
+          python -m build --verbose
+      - name: Check built package version
+        run: |
+          python -c "
+          import pkg_resources
+          import glob
+          wheel_files = glob.glob('dist/*.whl')
+          if wheel_files:
+              print(f'Built wheel: {wheel_files[0]}')
+          else:
+              print('No wheel files found')
+          "
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
