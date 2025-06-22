@@ -18,6 +18,21 @@ class DotView:
         dot_lines.append("    rankdir=LR;")
         dot_lines.append("    node [shape=box, style=filled];")
 
+        # Get violations and cycles from the analyzer
+        layer_violations = analyzer.get_layer_violations()
+        circular_dependencies = analyzer.find_circular_dependencies()
+
+        total_violations = len(layer_violations) + len(circular_dependencies)
+        if total_violations > 0:
+            label_text = (
+                f"Violations detected: Cycles: {len(circular_dependencies)}, Layer violations: {len(layer_violations)}"
+            )
+            dot_lines.append(f'    label="{label_text}";')
+            dot_lines.append('    labelloc="b";')
+            dot_lines.append('    labeljust="l";')
+            dot_lines.append('    fontname="Helvetica";')
+            dot_lines.append('    fontsize="10";')
+
         # Define colors for layers and nodes
         layer_colors = {
             "domain": "#A6C8FF",
@@ -86,11 +101,6 @@ class DotView:
                     f'        "{node.id}" [label="{node.attributes.label}"];'
                 )
             dot_lines.append("    }")
-
-        # Get violations and cycles from the analyzer
-        layer_violations = analyzer.get_layer_violations()
-        print(layer_violations)
-        circular_dependencies = analyzer.find_circular_dependencies()
 
         # Convert circular dependencies to a set of (source, target) tuples for easy lookup
         circular_edges = set()
