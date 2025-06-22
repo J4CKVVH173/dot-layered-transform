@@ -23,6 +23,9 @@ classifiers = [
 ]
 keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "analyzer"]
 
+[project.scripts]
+dot-layered-transform = "manage:main"
+
 [project.urls]
 "Homepage" = "https://github.com/J4CKVVH173/dot-layered-transform"
 "Bug Tracker" = "https://github.com/J4CKVVH173/dot-layered-transform/issues"
