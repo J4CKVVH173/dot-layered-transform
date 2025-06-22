@@ -20,9 +20,9 @@ class DotView:
 
         # Define colors for layers and nodes
         layer_colors = {
-            "domain": "#e4c1f9",
-            "application": "#d0f4de",
-            "infrastructure": "#fcf6bd",
+            "domain": "#A6C8FF",
+            "application": "#9EEBB3",
+            "infrastructure": "#FFE29A",
             "root": "#a9def9",
         }
         node_fill_color = "#FFFFFF"  # White for all nodes
@@ -64,7 +64,7 @@ class DotView:
         # Add root node if exists and not part of a layer subgraph
         if nodes_by_layer["root"]:
             dot_lines.append(f"    subgraph cluster_root {{")  # noqa
-            dot_lines.append(f'        label="Other Nodes";')  # noqa
+            dot_lines.append(f'        label="root";')  # noqa
             dot_lines.append("        style=filled;")
             dot_lines.append(
                 f"        color=\"{layer_colors.get('root', '#D3D3D3')}\";"
@@ -80,9 +80,9 @@ class DotView:
         for edge in graph.edges:
             edge_color = "black"
             if edge.attributes.edge_type.value == "uses":
-                edge_color = "blue"
+                edge_color = "#C4B5FD"
             elif edge.attributes.edge_type.value == "owns":
-                edge_color = "darkgreen"
+                edge_color = "#FFBC9A"
 
             dot_lines.append(
                 f'    "{edge.source}" -> "{edge.target}" [label="{edge.attributes.edge_type.value}", color="{edge_color}"];'  # noqa
