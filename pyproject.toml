@@ -22,10 +22,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Visualization",
 ]
 keywords = ["dot", "graph", "architecture", "dependencies", "visualization", "analyzer"]
-py_modules = ["manage"]
-
 [project.scripts]
-dot-layered-transform = "manage:main"
+dot-layered-transform = "dot_analyzer.cli:main"
 
 [project.urls]
 "Homepage" = "https://github.com/J4CKVVH173/dot-layered-transform"

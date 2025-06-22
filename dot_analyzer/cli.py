@@ -1,44 +1,43 @@
 import argparse
 import sys
 
-from dot_analyzer.core.dot_parser import DotParser
-from dot_analyzer.core.analyzer import ArchitectureAnalyzer
-from dot_analyzer.view.dot_builder import DotView
+from .core.dot_parser import DotParser
+from .core.analyzer import ArchitectureAnalyzer
+from .view.dot_builder import DotView
 
 
 def main():
+    """Main CLI entry point for dot-layered-transform."""
     parser = argparse.ArgumentParser(
         description="Analyze and transform DOT files for architectural layer visualization.",
-        prog="dot-layered-transform"
+        prog="dot-layered-transform",
     )
-    
+
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
-    
+
     # Transform command (existing functionality)
     transform_parser = subparsers.add_parser(
-        "transform",
-        help="Transform DOT file to layered visualization"
+        "transform", help="Transform DOT file to layered visualization"
     )
     transform_parser.add_argument("input_dot_file", help="Path to the input DOT file.")
     transform_parser.add_argument(
         "-o", "--output", help="Path to the output DOT file (default: stdout)."
     )
-    
+
     # Analyze command (new functionality)
     analyze_parser = subparsers.add_parser(
-        "analyze",
-        help="Analyze DOT file for architectural violations and cycles"
+        "analyze", help="Analyze DOT file for architectural violations and cycles"
     )
     analyze_parser.add_argument("input_dot_file", help="Path to the input DOT file.")
     analyze_parser.add_argument(
         "--format",
         choices=["text", "json"],
         default="text",
-        help="Output format (default: text)"
+        help="Output format (default: text)",
     )
 
     args = parser.parse_args()
-    
+
     if not args.command:
         parser.print_help()
         sys.exit(1)
@@ -78,9 +77,10 @@ def _handle_analyze(analyzer, args):
     """Handle analyze command."""
     violations = analyzer.get_layer_violations()
     cycles = analyzer.find_circular_dependencies()
-    
+
     if args.format == "json":
         import json
+
         result = {
             "violations": [
                 {
@@ -88,19 +88,16 @@ def _handle_analyze(analyzer, args):
                     "target": v.target,
                     "source_layer": v.source_layer,
                     "target_layer": v.target_layer,
-                    "type": v.violation_type
+                    "type": v.violation_type,
                 }
                 for v in violations
             ],
-            "circular_dependencies": [
-                [node.id for node in cycle]
-                for cycle in cycles
-            ]
+            "circular_dependencies": [[node.id for node in cycle] for cycle in cycles],
         }
         print(json.dumps(result, indent=2))
     else:
         print("=== Architecture Analysis ===\n")
-        
+
         if violations:
             print(f"Found {len(violations)} layer violations:")
             for i, violation in enumerate(violations, 1):
@@ -108,9 +105,9 @@ def _handle_analyze(analyzer, args):
                 print(f"     ({violation.source_layer} -> {violation.target_layer})")
         else:
             print("✓ No layer violations found")
-        
+
         print()
-        
+
         if cycles:
             print(f"Found {len(cycles)} circular dependencies:")
             for i, cycle in enumerate(cycles, 1):

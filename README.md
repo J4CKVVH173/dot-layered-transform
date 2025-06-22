@@ -8,7 +8,7 @@ The tool is available as a **PyPI package**, making it easy to install and use a
 
 ## Key Features
 
-* **CLI-driven Analysis**: A robust command-line interface (`dot-layered-transform`) with subcommands for various operations.
+* **CLI-driven Analysis**: A robust command-line interface (`python -m dot_analyzer.cli`) with subcommands for various operations.
 * **Dependency Graph Parsing**: Converts raw DOT file content into a structured `Graph` object for programmatic analysis.
 * **Circular Dependency Detection**: Identifies and reports cyclic dependencies within the module graph, helping to pinpoint potential architectural issues.
 * **Layer Violation Detection**: Verifies adherence to predefined architectural layer rules (e.g., `domain` should not depend on `application` or `infrastructure`, `application` can only depend on `domain`, `infrastructure` can only depend on `application`). It outputs a clear list of any detected violations.
@@ -21,7 +21,7 @@ The tool is available as a **PyPI package**, making it easy to install and use a
 
 ## Project Idea and Workflow
 
-The core idea is to provide a robust command-line interface (`dot-layered-transform`) that takes a raw DOT dependency graph (e.g., from `cargo modules`) and performs various analyses or transformations.
+The core idea is to provide a robust command-line interface (`python -m dot_analyzer.cli`) that takes a raw DOT dependency graph (e.g., from `cargo modules`) and performs various analyses or transformations.
 
 Here's the typical workflow:
 
@@ -74,10 +74,10 @@ Use the `dot-layered-transform` CLI tool to analyze the graph, detect violations
 
 ```bash
 # Analyze for violations and cycles
-dot-layered-transform analyze graph.dot
+python -m dot_analyzer.cli analyze graph.dot
 
 # Transform and generate a layered DOT file
-dot-layered-transform transform graph.dot -o layered_graph.dot
+python -m dot_analyzer.cli transform graph.dot -o layered_graph.dot
 ```
 
 The `analyze` command will print any detected circular dependencies or layer violations to the console.
@@ -102,10 +102,10 @@ dot -Tpng layered_graph.dot -o layered_graph.png
 
 ### Command Line Usage
 
-After installing the package (`pip install dot-layered-transform`), you can use the `dot-layered-transform` command from your terminal:
+After installing the package (`pip install dot-layered-transform`), you can use the CLI tool:
 
 ```bash
-dot-layered-transform --help
+python -m dot_analyzer.cli --help
 ```
 
 This will show the main commands available: `transform` and `analyze`.
@@ -113,7 +113,7 @@ This will show the main commands available: `transform` and `analyze`.
 **Transform Command:**
 
 ```bash
-dot-layered-transform transform <INPUT_DOT_FILE> [-o <OUTPUT_DOT_FILE>]
+python -m dot_analyzer.cli transform <INPUT_DOT_FILE> [-o <OUTPUT_DOT_FILE>]
 ```
 
 * `<INPUT_DOT_FILE>`: Path to your original DOT file (e.g., `example/graph.dot`).
@@ -122,7 +122,7 @@ dot-layered-transform transform <INPUT_DOT_FILE> [-o <OUTPUT_DOT_FILE>]
 **Analyze Command:**
 
 ```bash
-dot-layered-transform analyze <INPUT_DOT_FILE> [--format <FORMAT>]
+python -m dot_analyzer.cli analyze <INPUT_DOT_FILE> [--format <FORMAT>]
 ```
 
 * `<INPUT_DOT_FILE>`: Path to your original DOT file.
