@@ -49,7 +49,9 @@ def application_to_application_dot_content():
 
 @pytest.fixture
 def infrastructure_to_infrastructure_dot_content():
-    with open(path.join(CURRENT_DIR, "infrastructure_to_infrastructure.dot"), "r") as diagram:
+    with open(
+        path.join(CURRENT_DIR, "infrastructure_to_infrastructure.dot"), "r"
+    ) as diagram:
         return diagram.read()
 
 
@@ -61,7 +63,9 @@ def application_uses_domain_dot_content():
 
 @pytest.fixture
 def infrastructure_uses_application_dot_content():
-    with open(path.join(CURRENT_DIR, "infrastructure_uses_application.dot"), "r") as diagram:
+    with open(
+        path.join(CURRENT_DIR, "infrastructure_uses_application.dot"), "r"
+    ) as diagram:
         return diagram.read()
 
 
@@ -73,7 +77,9 @@ def infrastructure_uses_domain_dot_content():
 
 @pytest.fixture
 def application_uses_infrastructure_dot_content():
-    with open(path.join(CURRENT_DIR, "application_uses_infrastructure.dot"), "r") as diagram:
+    with open(
+        path.join(CURRENT_DIR, "application_uses_infrastructure.dot"), "r"
+    ) as diagram:
         return diagram.read()
 
 
@@ -91,7 +97,9 @@ def application_uses_unknown_dot_content():
 
 @pytest.fixture
 def infrastructure_uses_unknown_dot_content():
-    with open(path.join(CURRENT_DIR, "infrastructure_uses_unknown.dot"), "r") as diagram:
+    with open(
+        path.join(CURRENT_DIR, "infrastructure_uses_unknown.dot"), "r"
+    ) as diagram:
         return diagram.read()
 
 
@@ -104,4 +112,18 @@ def domain_uses_no_layer_dot_content():
 @pytest.fixture
 def application_uses_no_layer_dot_content():
     with open(path.join(CURRENT_DIR, "application_uses_no_layer.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def test_graph_input_content():
+    with open(path.join(CURRENT_DIR, "complexes", "graph_input.dot"), "r") as diagram:
+        return diagram.read()
+
+
+@pytest.fixture
+def test_graph_expected_content():
+    with open(
+        path.join(CURRENT_DIR, "complexes", "graph_expected.dot"), "r"
+    ) as diagram:
         return diagram.read()

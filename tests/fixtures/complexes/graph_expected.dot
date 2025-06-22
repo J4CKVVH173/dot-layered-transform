@@ -1,0 +1,51 @@
+digraph G {
+    rankdir=LR;
+    node [shape=box, style=filled];
+    label="Violations detected: Cycles: 0, Layer violations: 1";
+    labelloc="b";
+    labeljust="l";
+    fontname="Helvetica";
+    fontsize="10";
+    subgraph cluster_domain {
+        label="Domain Layer";
+        style=filled;
+        color="#A6C8FF";
+        node [fillcolor="#FFFFFF"];
+        "my_app::domain" [label="domain"];
+        "my_app::domain::module_a" [label="domain::module_a"];
+    }
+    subgraph cluster_application {
+        label="Application Layer";
+        style=filled;
+        color="#9EEBB3";
+        node [fillcolor="#FFFFFF"];
+        "my_app::application" [label="application"];
+        "my_app::application::module_b" [label="application::module_b"];
+    }
+    subgraph cluster_infrastructure {
+        label="Infrastructure Layer";
+        style=filled;
+        color="#FFE29A";
+        node [fillcolor="#FFFFFF"];
+        "my_app::infrastructure" [label="infrastructure"];
+        "my_app::infrastructure::module_c" [label="infrastructure::module_c"];
+    }
+    subgraph cluster_unknown {
+        label="Unknown Layer";
+        style=filled;
+        color="#D3D3D3";
+        node [fillcolor="#FFFFFF"];
+        "my_app::unknown_module" [label="unknown_module"];
+    }
+    subgraph cluster_unknown {
+        label="Unknown Layer";
+        style=filled;
+        color="#D3D3D3";
+        node [fillcolor="#FFFFFF"];
+        "my_app::unknown_module" [label="unknown_module"];
+    }
+    "my_app::domain" -> "my_app::domain::module_a" [label="owns", color="black"];
+    "my_app::application" -> "my_app::application::module_b" [label="owns", color="black"];
+    "my_app::infrastructure" -> "my_app::infrastructure::module_c" [label="owns", color="black"];
+    "my_app::domain::module_a" -> "my_app::unknown_module" [label="uses", color="#f55c7a", style="dashed"];
+}
