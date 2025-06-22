@@ -169,13 +169,6 @@ class DotParser:
         else:
             return NodeType.MODULE, "unknown", label.strip()
 
-    def parse_file(self, file_path: str) -> Graph:
-        """Parse DOT file."""
-        with open(file_path, "r", encoding="utf-8") as f:
-            content = f.read()
-
-        return self.parse_content(content)
-
     def parse_content(self, content: str) -> Graph:
         """Parse DOT file content."""
         lines = content.split("\n")
@@ -266,9 +259,3 @@ class DotParser:
                 continue
 
         return graph
-
-
-def parse_dot_file(file_path: str) -> Graph:
-    """Convenient function for parsing DOT file."""
-    parser = DotParser()
-    return parser.parse_file(file_path)

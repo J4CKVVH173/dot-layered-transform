@@ -1,4 +1,4 @@
-from dot_analyzer.dot_parser import Node, NodeAttributes, NodeType
+from dot_analyzer.core.dot_parser import Node, NodeAttributes, NodeType
 
 CIRCLED_NODES = [
     [

@@ -1,9 +1,9 @@
 import argparse
 import sys
 
-from dot_analyzer.dot_parser import DotParser
-from dot_analyzer.analyzer import ArchitectureAnalyzer
-from dot_analyzer.graph_visualizer import GraphVisualizer
+from dot_analyzer.core.dot_parser import DotParser
+from dot_analyzer.core.analyzer import ArchitectureAnalyzer
+from dot_analyzer.view.dot_builder import DotView
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
     analyzer = ArchitectureAnalyzer(
         graph
     )  # ArchitectureAnalyzer is needed for LayerHierarchy
-    visualizer = GraphVisualizer()
+    visualizer = DotView()
 
     layered_dot_content = visualizer.to_layered_dot(graph, analyzer)
 

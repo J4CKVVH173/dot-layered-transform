@@ -1,4 +1,4 @@
-from dot_analyzer.dot_parser import (
+from dot_analyzer.core.dot_parser import (
     Graph,
     Node,
     Edge,

@@ -2,7 +2,7 @@ from .fixtures.simple_graph import simple_graph
 from .fixtures.nested_graph import nested_graph
 from .fixtures.circle_graph import circle_graph
 
-from dot_analyzer.dot_parser import (
+from dot_analyzer.core.dot_parser import (
     DotParser,
     NodeType,
 )

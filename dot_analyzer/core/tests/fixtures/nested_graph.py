@@ -1,4 +1,4 @@
-from dot_analyzer.dot_parser import (
+from dot_analyzer.core.dot_parser import (
     Graph,
     Node,
     Edge,
@@ -10,8 +10,8 @@ from dot_analyzer.dot_parser import (
 )
 
 
-def circle_graph():
-    """Function to get circle.dot as python object."""
+def nested_graph():
+    """Function to get nested.dot as python object."""
     graph_attrs = GraphAttributes(label="test_graph", layout="dot", rankdir="LR")
 
     root_node = Node(
@@ -44,17 +44,6 @@ def circle_graph():
             node_type=NodeType.MODULE,
             visibility="pub(crate) mod",
             name="module_b",
-        ),
-    )
-
-    module_c_node = Node(
-        id="root::module_c",
-        attributes=NodeAttributes(
-            label="pub mod|module_c",
-            fillcolor="#f4a261",
-            node_type=NodeType.MODULE,
-            visibility="pub mod",
-            name="module_c",
         ),
     )
 
@@ -91,17 +80,6 @@ def circle_graph():
         ),
     )
 
-    submodule_c1_node = Node(
-        id="root::module_c::submodule_c1",
-        attributes=NodeAttributes(
-            label="pub mod|submodule_c1",
-            fillcolor="#e0bb94",
-            node_type=NodeType.MODULE,
-            visibility="pub mod",
-            name="submodule_c1",
-        ),
-    )
-
     edge1 = Edge(
         source="root",
         target="root::module_a",
@@ -117,18 +95,6 @@ def circle_graph():
     edge2 = Edge(
         source="root",
         target="root::module_b",
-        attributes=EdgeAttributes(
-            label="owns",
-            color="#000000",
-            style="solid",
-            constraint=True,
-            edge_type=EdgeType.OWNS,
-        ),
-    )
-
-    edge_root_c = Edge(
-        source="root",
-        target="root::module_c",
         attributes=EdgeAttributes(
             label="owns",
             color="#000000",
@@ -174,57 +140,21 @@ def circle_graph():
         ),
     )
 
-    edge_c_subc1 = Edge(
-        source="root::module_c",
-        target="root::module_c::submodule_c1",
-        attributes=EdgeAttributes(
-            label="owns",
-            color="#000000",
-            style="solid",
-            constraint=True,
-            edge_type=EdgeType.OWNS,
-        ),
-    )
-
     edge6 = Edge(
-        source="root::module_a",
-        target="root::module_b",
-        attributes=EdgeAttributes(
-            label="uses",
-            color="#7f7f7f",
-            style="dashed",
-            constraint=False,
-            edge_type=EdgeType.USES,
-        ),
-    )
-
-    edge_b_c = Edge(
-        source="root::module_b",
-        target="root::module_c",
-        attributes=EdgeAttributes(
-            label="uses",
-            color="#7f7f7f",
-            style="dashed",
-            constraint=False,
-            edge_type=EdgeType.USES,
-        ),
-    )
-
-    edge_c_a = Edge(
-        source="root::module_c",
-        target="root::module_a",
-        attributes=EdgeAttributes(
-            label="uses",
-            color="#ff0000",
-            style="dashed",
-            constraint=False,
-            edge_type=EdgeType.USES,
-        ),
-    )
-
-    edge8 = Edge(
         source="root::module_a::submodule_a1",
         target="root::module_b::submodule_b1",
+        attributes=EdgeAttributes(
+            label="uses",
+            color="#7f7f7f",
+            style="dashed",
+            constraint=False,
+            edge_type=EdgeType.USES,
+        ),
+    )
+
+    edge7 = Edge(
+        source="root::module_a",
+        target="root::module_b",
         attributes=EdgeAttributes(
             label="uses",
             color="#7f7f7f",
@@ -238,21 +168,15 @@ def circle_graph():
     graph.add_node(root_node)
     graph.add_node(module_a_node)
     graph.add_node(module_b_node)
-    graph.add_node(module_c_node)
     graph.add_node(submodule_a1_node)
     graph.add_node(submodule_a2_node)
     graph.add_node(submodule_b1_node)
-    graph.add_node(submodule_c1_node)
     graph.add_edge(edge1)
     graph.add_edge(edge2)
-    graph.add_edge(edge_root_c)
     graph.add_edge(edge3)
     graph.add_edge(edge4)
     graph.add_edge(edge5)
-    graph.add_edge(edge_c_subc1)
     graph.add_edge(edge6)
-    graph.add_edge(edge_b_c)
-    graph.add_edge(edge_c_a)
-    graph.add_edge(edge8)
+    graph.add_edge(edge7)
 
     return graph

@@ -1,8 +1,8 @@
-from .dot_parser import Graph
-from analyzer import ArchitectureAnalyzer, LayerHierarchy
+from dot_analyzer.core.dot_parser import Graph
+from dot_analyzer.core.analyzer import ArchitectureAnalyzer, LayerHierarchy
 
 
-class GraphVisualizer:
+class DotView:
     """
     A class to visualize architectural graphs, specifically for generating
     DOT diagrams with modules grouped by layers.
@@ -20,10 +20,10 @@ class GraphVisualizer:
 
         # Define colors for layers and nodes
         layer_colors = {
-            "domain": "#ADD8E6",
-            "application": "#90EE90",
-            "infrastructure": "#FFD700",
-            "root": "#D3D3D3",
+            "domain": "#e4c1f9",
+            "application": "#d0f4de",
+            "infrastructure": "#fcf6bd",
+            "root": "#a9def9",
         }
         node_fill_color = "#FFFFFF"  # White for all nodes
 
@@ -51,8 +51,10 @@ class GraphVisualizer:
                 dot_lines.append(f"    subgraph cluster_{layer_name} {{")
                 dot_lines.append(f'        label="{layer_name.capitalize()} Layer";')
                 dot_lines.append("        style=filled;")
-                dot_lines.append(f"        color=\"{layer_colors.get(layer_name, '#D3D3D3')}\";")
-                dot_lines.append(f"        node [fillcolor=\"{node_fill_color}\"];")
+                dot_lines.append(
+                    f"        color=\"{layer_colors.get(layer_name, '#D3D3D3')}\";"
+                )
+                dot_lines.append(f'        node [fillcolor="{node_fill_color}"];')
                 for node in nodes_by_layer[layer_name]:
                     dot_lines.append(
                         f'        "{node.id}" [label="{node.attributes.label}"];'
@@ -62,12 +64,16 @@ class GraphVisualizer:
         # Add root node if exists and not part of a layer subgraph
         if nodes_by_layer["root"]:
             dot_lines.append(f"    subgraph cluster_root {{")  # noqa
-            dot_lines.append(f"        label=\"Other Nodes\";")  # noqa
+            dot_lines.append(f'        label="Other Nodes";')  # noqa
             dot_lines.append("        style=filled;")
-            dot_lines.append(f"        color=\"{layer_colors.get('root', '#D3D3D3')}\";")
-            dot_lines.append(f"        node [fillcolor=\"{node_fill_color}\"];")
+            dot_lines.append(
+                f"        color=\"{layer_colors.get('root', '#D3D3D3')}\";"
+            )
+            dot_lines.append(f'        node [fillcolor="{node_fill_color}"];')
             for node in nodes_by_layer["root"]:
-                dot_lines.append(f'        "{node.id}" [label="{node.attributes.label}"];')
+                dot_lines.append(
+                    f'        "{node.id}" [label="{node.attributes.label}"];'
+                )
             dot_lines.append("    }")
 
         # Add edges
